@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>todoList</title>
 </head>
 <body>
     <h1>hello!</h1>
+    <ul>
+    <% for(let d of task ) { %>
+    <li><%= d.task %></li>
+    <a href="/todo/<%= d.id %>">詳細</a>
+    <% } %>
+    </ul>
+    <a href="/new">新規追加</a>
 </body>
 </html>

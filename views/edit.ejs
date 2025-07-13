@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タスクの更新、編集</title>
+</head>
+
+<body>
+    <h1><b style="color: aqua;">
+            <%= selectedTask.task %>
+        </b>の編集</h1>
+    <form action="/todo/<%= selectedTask.id %>?_method=PATCH" method="post">
+        <input type="text" name="task" id="task" value="<%= selectedTask.task %>">
+        <button>更新</button>
+    </form>
+</body>
+
+</html>

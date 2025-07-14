@@ -7,6 +7,16 @@ const ejsMate = require("ejs-mate");
 const { v4: uuid } = require('uuid');
 uuid();
 
+// mongoose接続
+async function main() {
+    try {
+        await mongoose.connect('mongodb://127.0.0.1:27017/test');
+        console.log('接続OK')
+    } catch (e) {
+        console.log('接続エラー:', e);
+    }
+}
+main();
 
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true }));
@@ -87,5 +97,5 @@ app.post('/new', (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.log('?????起動成功?????')
+    console.log('/////起動成功/////')
 })

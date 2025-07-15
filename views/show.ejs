@@ -6,11 +6,11 @@
     <title>タスクの詳細</title>
 </head>
 <body>
-    <h1><%= selectedTask.task %></h1>
-    <%= selectedTask.id %>
+    <h1><%= task.name %></h1>
+    <div><%= task.priority %></div>
     <a href="/todo">タスク一覧へ</a>
-    <a href="/todo/<%=selectedTask.id %>/edit">更新</a>
-    <form action="/todo/<%=selectedTask.id %>?_method=DELETE" method="POST">
+    <a href="/todo/<%= task._id %>/edit">更新</a>
+    <form action="/todo/<%=task._id %>?_method=DELETE" method="POST">
         <button>削除</button>
     </form>
 </body>

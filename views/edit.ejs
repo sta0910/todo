@@ -8,11 +8,18 @@
 </head>
 
 <body>
-    <h1><b style="color: aqua;">
-            <%= selectedTask.task %>
+    <h1><b style="color: rgb(130, 121, 211);">
+            <%= task.name %>
         </b>の編集</h1>
-    <form action="/todo/<%= selectedTask.id %>?_method=PATCH" method="post">
-        <input type="text" name="task" id="task" value="<%= selectedTask.task %>">
+    <form action="/todo/<%= task._id %>?_method=PATCH" method="post">
+        <label for="task">タスク名</label>
+        <input type="text" name="task" id="task" value="<%= task.name  %>">
+        <label for="priority">期限</label>
+        <select name="priority" id="priority">
+            <option value="今日中">今日中</option>
+            <option value="今週中">今週中</option>
+            <option value="今月中">今月中</option>
+        </select>
         <button>更新</button>
     </form>
 </body>

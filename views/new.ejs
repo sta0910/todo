@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>todoの追加</title>
+    <title>タスクの追加ページ</title>
 </head>
+
 <body>
-    <h1>todoの追加</h1>
+    <h1>タスクの追加</h1>
     <form action="/todo" method="POST">
-        <label for="task">やることを追加しよう！</label>
-        <input type="text" id="task" name="task" placeholder="やるべきことはなんですか？">
+        <div>
+            <label for="task">やることを追加しよう！</label>
+            <input type="text" id="name" name="name" placeholder="ここに追加">
+        </div>
+        <div>
+            <label for="priority">期限</label>
+            <select name="priority" id="priority">
+                <option value="今日中">今日中</option>
+                <option value="今週中">今週中</option>
+                <option value="今月中">今月中</option>
+            </select>
+        </div>
         <button>
             追加！
         </button>
+
     </form>
     <a href="/todo">タスク一覧へ</a>
 </body>
+
 </html>

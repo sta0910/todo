@@ -4,20 +4,23 @@ const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
-const { v4: uuid } = require('uuid');
-uuid();
+const Task = require('./models/tasks');
+const { console } = require('inspector');
 
-// mongoose接続
+
+// ---mongoose接続---
 async function main() {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/test');
-        console.log('接続OK')
+        await mongoose.connect('mongodb://127.0.0.1:27017/taskStorage');
+        console.log('mongoDBOK')
     } catch (e) {
-        console.log('接続エラー:', e);
+        console.log('mongoDBError:', e);
     }
 }
 main();
 
+
+// -----------------------------
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
@@ -26,65 +29,51 @@ app.use(express.json())
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-
-//サンプル
-let task = [
-    {
-        task: "math",
-        id: uuid()
-    },
-    {
-        task: "English",
-        id: uuid()
-    },
-    {
-        task: "P.E",
-        id: uuid()
-    }
-]
+// ---------
 
 
 app.get('/home', (req, res) => {
     res.send('ホーム');
 })
 
-//todoがlist.ejsにわたる
-app.get('/todo', (req, res) => {
-    res.render('list', { task })
+app.get('/todo', async (req, res) => {
+    const tasks = await Task.find({})
+    res.render('list', { tasks })
 })
 
 //postリクエスト受付↓
 //req.bodyはapp.use(express.urlencoded({ extended: true }));で変換しないと見れない
-app.post('/todo', (req, res) => {
-    const { task: tName } = req.body;
-    task.push({ task: tName, id: uuid() })
-    console.log(task)
-    res.redirect('/todo');
+app.post('/todo', async (req, res) => {
+    const newTask = new Task(req.body);
+    //↑new Task(req.body)今回は項目が少ないからいいけど、もし多数のデータ項目の中からいくつかのデータを持ってくる
+    // 場合は分割代入new Task ({name, priority})のほうがいい
+    await newTask.save();
+    res.redirect(`/todo/${newTask._id}`)
 });
 
-app.get('/todo/:id', (req, res) => {
+app.get('/todo/:id', async (req, res) => {
     const { id } = req.params;
-    const selectedTask = task.find(t => t.id === id)
-    res.render('show', { selectedTask });
+    const task = await Task.findById(id)
+    res.render('show', { task });
 });
 
-app.get('/todo/:id/edit', (req, res) => {
+app.get('/todo/:id/edit', async (req, res) => {
     const { id } = req.params;
-    const selectedTask = task.find(t => t.id === id)
-    res.render('edit', { selectedTask })
+    const task = await Task.findById(id)
+    res.render('edit', { task })
 })
 
-app.patch('/todo/:id', (req, res) => {
+app.patch('/todo/:id', async (req, res) => {
     const { id } = req.params;
-    const newTask = req.body.task;
-    const foundDoit = task.find(t => t.id === id);
-    foundDoit.task = newTask;
-    res.redirect('/todo');
+    const task = await Task.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
+    //{ runValidators: true, new: true }
+    res.redirect(`/todo/${task._id}`);
 });
 
 app.delete('/todo/:id', (req, res) => {
     const { id } = req.params;
-    task = task.filter(t => t.id !== id)
+    const task = Task.findById(id)
+    Task.de
     res.redirect('/todo');
 });
 
@@ -92,9 +81,6 @@ app.get('/new', (req, res) => {
     res.render('new');
 })
 
-app.post('/new', (req, res) => {
-
-});
 
 app.listen(3000, () => {
     console.log('/////起動成功/////')

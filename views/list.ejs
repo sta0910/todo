@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>todoList</title>
+    <title>タスクの一覧</title>
 </head>
 <body>
-    <h1>hello!</h1>
+    <h1>やること一覧</h1>
     <ul>
-    <% for(let d of task ) { %>
-    <li><%= d.task %></li>
-    <a href="/todo/<%= d.id %>">詳細</a>
+    <% for(let task of tasks ) { %>
+    <li><a href="/todo/<%= task._id %>"><b><%= task.name %></b></a>:<%= task.priority %></li>
+    
     <% } %>
     </ul>
     <a href="/new">新規追加</a>

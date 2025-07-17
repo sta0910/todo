@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
 const Task = require('./models/tasks');
 const { console } = require('inspector');
+const { getPriority } = require('os');
 
 
 // ---mongoose接続---
@@ -30,6 +31,8 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 // ---------
+
+const priorities = ["今日中", "今週中", "今月中"]
 
 
 app.get('/home', (req, res) => {
@@ -60,7 +63,7 @@ app.get('/todo/:id', async (req, res) => {
 app.get('/todo/:id/edit', async (req, res) => {
     const { id } = req.params;
     const task = await Task.findById(id)
-    res.render('edit', { task })
+    res.render('edit', { task, priorities })
 })
 
 app.patch('/todo/:id', async (req, res) => {
@@ -70,15 +73,14 @@ app.patch('/todo/:id', async (req, res) => {
     res.redirect(`/todo/${task._id}`);
 });
 
-app.delete('/todo/:id', (req, res) => {
+app.delete('/todo/:id', async (req, res) => {
     const { id } = req.params;
-    const task = Task.findById(id)
-    Task.de
+    await Task.findByIdAndDelete(id)
     res.redirect('/todo');
 });
 
 app.get('/new', (req, res) => {
-    res.render('new');
+    res.render('new', { priorities });
 })
 
 

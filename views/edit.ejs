@@ -16,9 +16,9 @@
         <input type="text" name="task" id="task" value="<%= task.name  %>">
         <label for="priority">期限</label>
         <select name="priority" id="priority">
-            <option value="今日中">今日中</option>
-            <option value="今週中">今週中</option>
-            <option value="今月中">今月中</option>
+            <% for(let pri of priorities) {%>
+            <option value="<%= pri %>" <%= task.priority === pri ? "selected" : "" %>><%= pri %></option>
+            <% } %>
         </select>
         <button>更新</button>
     </form>
